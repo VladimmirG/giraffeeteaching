@@ -1,0 +1,69 @@
+function GetTEXTData(strURL)
+{
+    var xmlhttp, xmlDoc;
+    xmlhttp = new XMLHttpRequest();
+    xmlhttp.open("GET", strURL, false);
+    xmlhttp.send();
+
+    if (xmlhttp.responseText==""){
+    return "none";
+    }else{
+    return xmlhttp.responseText;
+    }
+}
+
+function Fn_download(type){   
+    switch(type){
+        case 0:
+            var user= $("#mid2").val();
+            var Ucode=$("#code2").val();
+        break;
+        case "kid":
+            var user= $("#mid").val();
+            var Ucode=$("#code").val();
+        break;
+    }
+
+    //var result=GetTEXTData("/eTeaching/Ajax.aspx?do="+window.do+"&id="+String(user).toLowerCase()+"&pass="+String(Ucode).toLowerCase());
+    var result=GetTEXTData("/eTeaching/Ajax.aspx?do="+window.do+"&id="+String(user).toLowerCase()+"&pass="+Ucode);
+    var textInfo=result.split("^");
+
+    var msg = textInfo[3];
+    
+    switch(textInfo[2]){
+        case "1" : 
+            switch(type){
+                case 0:
+                    document.location.href="/"+msg;
+                    $(".Msg2").css("display","block")
+                    $(".Msg2").html('下载成功!')
+                    $("#mid2").val('');
+                    $("#code2").val('');
+                break;
+                case "kid":
+                    var fdownload=String(msg).split("_");
+                    var fileName=fdownload[0]+"_"+type+"_"+fdownload[1];
+                    document.location.href="/"+fileName;
+                    $(".Msg").css("display","block")
+                    $(".Msg").html('下载成功!')
+                    $("#mid").val('');
+                    $("#code").val('');
+                break;
+            }
+        break; 
+        default :
+            switch(type){
+                case 0:
+                    $(".Msg2").html(msg)
+                    $(".Msg2").css("display","block")
+                break;
+                case "kid":
+                    $(".Msg").html(msg)
+                    $(".Msg").css("display","block")
+                break;
+            }
+        break; 
+    }
+
+}
+
